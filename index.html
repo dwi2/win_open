@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Here is a really rrrrrrrrrrrrrrrreeeeeeaaaaaaaaaalllllllllllllllllyyyyyyy lllllloooooooonnnnggg title</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <style>
+            .large, div {
+                font-size: 1rem;
+            }
+
+            div.event-hint {
+                min-height: 2.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+    <article>
+        <button id="alert" class="large">ALERT</button>
+        <button id="confirm" class="large">CONFIRM</button>
+        <a href="tel:0988682883">call me maybe?</a>
+        <select id="selection" class="large">
+          <option>one</option>
+          <option>two</option>
+          <option>three</option>
+        </select>
+        <br/>
+        <button id="open" class="large">OPEN</button>
+        <button id="open-new-tab" class="large">OPEN IN NEW TAB</button>
+        <div id='mouse-event-hint' class="event-hint"></div>
+        <div id='touch-event-hint' class="event-hint"></div>
+        <div><input type="text"></input></div>
+        <div><input type="text"></input></div>
+    </article>
+    <script>
+(function(global) {
+    var alertButton = document.getElementById('alert');
+    var confirmButton = document.getElementById('confirm');
+    var openButton = document.getElementById('open');
+    var openNewTabButton = document.getElementById('open-new-tab');
+    var mouseEventHintDiv = document.getElementById('mouse-event-hint');
+    var touchEventHintDiv = document.getElementById('touch-event-hint');
+    var mouseEventTimerId, touchEventTimerId;
+
+    var clearMouseEventText = function() {
+        if (mouseEventTimerId) {
+            global.clearTimeout(mouseEventTimerId);
+            mouseEventTimerId = undefined;
+        }
+        mouseEventHintDiv.textContent = '';
+    };
+
+    var clearTouchEventText = function() {
+        if (touchEventTimerId) {
+            global.clearTimeout(touchEventTimerId);
+            touchEventTimerId = undefined;
+        }
+        touchEventHintDiv.textContent = '';
+    };
+
+    global.addEventListener('click', (evt) => {
+        switch(evt.target) {
+            case openButton:
+                window.open('open.html');
+                break;
+            case openNewTabButton:
+                window.open('open.html', '_blank');
+                break;
+            case alertButton:
+                window.alert('watch out!');
+                break;
+            case confirmButton:
+                window.confirm('OK?');
+                break;
+        }
+    });
+    ['mousedown', 'mouseup', 'mousemove'].forEach((eventName) => {
+        global.addEventListener(eventName, (evt) => {
+            clearMouseEventText();
+            mouseEventHintDiv.textContent =
+                evt.type + ': (' + evt.clientX + ', ' + evt.clientY + ')';
+            mouseEventTimerId = global.setTimeout(
+                clearMouseEventText, 1500);
+        });
+    });
+    ['touchstart', 'touchend'].forEach((eventName) => {
+        global.addEventListener(eventName, (evt) => {
+            clearTouchEventText();
+            var touch = evt.touches[0];
+            var text = touch ?
+                evt.type + ': (' + touch.clientX + ', ' + touch.clientY + ')' :
+                evt.type;
+            touchEventHintDiv.textContent = text;
+            touchEventTimerId = global.setTimeout(
+                clearTouchEventText, 1500);
+        });
+    });
+
+}(window));
+    </script>
+    </body>
+</html>
